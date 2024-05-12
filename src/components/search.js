@@ -3,23 +3,18 @@ import { AsyncPaginate } from "react-select-async-paginate";
 import { GEO_API_URL, geoApiOptions } from "../api";
 
 const Search = ({ onSearchChange }) => {
-
     const [search, setSearch] = useState(null);
 
     const loadOptions = (inputValue) => {
-
-        return fetch(`${GEO_API_URL}?minPopulation=1000000&namePrefix=${inputValue}`,
-        geoApiOptions)
-            .then(reponse => reponse.json())
-            .then(respone => {
-                return {
-                    option: respone.data.map((city) => {
-                        return{
-                            value: `${city.latitude} ${city.longitude}`,
-                            label: `${city.name}, ${city.countryCode}`,
-                        }
-                    })
-                }
+        return fetch(`${GEO_API_URL}?minPopulation=1000000&namePrefix=${inputValue}`, geoApiOptions)
+            .then(response => response.json())
+            .then(data => {
+                // Assuming your response data is structured correctly
+                const options = data.data.map(city => ({
+                    value: `${city.latitude} ${city.longitude}`,
+                    label: `${city.name}, ${city.countryCode}`,
+                }));
+                return { options }; // Corrected to 'options' instead of 'option'
             })
             .catch(err => console.error(err));
     }
@@ -37,10 +32,7 @@ const Search = ({ onSearchChange }) => {
             onChange={handleOnChange}
             loadOptions={loadOptions}
         />
-
-
-
-    )
+    );
 }
 
 export default Search;
